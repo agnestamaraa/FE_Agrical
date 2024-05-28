@@ -57,7 +57,7 @@ class KondisiTes extends StatelessWidget {
                   child: Center(
                     child: Text(
                       'Item ${index + 1}',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                 ),

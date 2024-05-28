@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
+import 'package:kalender_pertanian_ta/model/location.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/infotertinggi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/prakiraancuaca.dart';
 import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
 import 'package:kalender_pertanian_ta/widgets/button_global.dart';
+import 'package:kalender_pertanian_ta/services/location_service.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +22,11 @@ class HomeTest extends StatefulWidget {
 }
 
 class _HomeTestState extends State<HomeTest> {
+  
+  late Future<List<Location>> locationList; // for fetched location data
+  late Future<WeatherModel> weatherData; // for fetched weather data
+
+  // Method to fetch locations
   final List<String> items = [
     'Cikembulan',
     'Cimalaka',
@@ -30,6 +38,32 @@ class _HomeTestState extends State<HomeTest> {
     'Cisitu',
   ];
 
+  // Location and Location Key List
+  final List<Map<String, dynamic>> locationData = [ 
+    {"location": "Buahdua", "code": 202581}, 
+    {"location": "Cibugel", "code": 3452845}, 
+    {"location": "Cimalaka", "code": 202527}, 
+    {"location": "Cimanggung", "code": 1852863},
+    {"location": "Cisarua", "code": 3452913},
+    {"location": "Cisitu", "code": 3452825},
+    {"location": "Darmaraja", "code": 686497},
+    {"location": "Ganeas", "code": 3452539},
+    {"location": "Pamulihan", "code": 3452766}, 
+    {"location": "Rancakalong", "code": 202724},
+    {"location": "Situraja", "code": 3452954},
+    {"location": "Sukasari", "code": 3452753},
+    {"location": "Sumedang Selatan", "code": 678040},
+    {"location": "Sumedang Utara", "code": 678039},
+    {"location": "Surian", "code": 677851},
+    {"location": "Tanjungmedar", "code": 3452929},
+    {"location": "Tanjungsari", "code": 3452745},
+    {"location": "Tomo", "code": 202755},
+    {"location": "Ujungjaya", "code": 202758},
+    {"location": "Wado", "code": 202759},
+  ]; 
+
+  
+
   List<_SalesData> data = [
     _SalesData('Kentang', 35),
     _SalesData('Kacang', 28),
@@ -38,16 +72,16 @@ class _HomeTestState extends State<HomeTest> {
     _SalesData('Jagung', 34)
   ];
 
-  late Future<WeatherModel> weatherData;
-
   String? selectedValue;
+  int selectedLocationCode = 202581;
   final TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition');
-    print("AAAA");
+
+    weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
+    
     print(weatherData);
 
   }
@@ -129,22 +163,27 @@ class _HomeTestState extends State<HomeTest> {
                               color: Theme.of(context).hintColor,
                             ),
                           ),
-                          items: items
-                              .map((item) => DropdownMenuItem(
-                                    value: item,
+                          items: 
+                              locationData.map((item) { 
+                                return DropdownMenuItem<String>(
+                                    value: item['location'],
                                     child: Text(
-                                      item,
+                                      item['location'],
                                       style: const TextStyle(
                                         fontSize: 16,
                                       ),
                                     ),
-                                  ))
+                                  );
+                                  })
                               .toList(),
                           value: selectedValue,
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value;
+                              selectedLocationCode = locationData.firstWhere((element) => element['location'] == value)['code'];
                             });
+
+                            // weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
                           },
                           buttonStyleData: const ButtonStyleData(
                               padding: EdgeInsets.only(left: 0, right: 9),
@@ -252,6 +291,7 @@ class _HomeTestState extends State<HomeTest> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
+                                          Text(selectedLocationCode.toString()),
                                           Text(
                                             weather.time,
                                             style: TextStyle(
@@ -396,9 +436,10 @@ class _SalesData {
   final double sales;
 }
 
-Future<WeatherModel> _getWeatherFromUrl(String url) async {
+
+Future<WeatherModel> _getWeatherFromUrl(String url, String code) async {
     final body = jsonEncode({
-        "locationkey": "3454195", 
+        "locationkey": code, 
     });
     final response = await http.post(
       Uri.parse(url),
