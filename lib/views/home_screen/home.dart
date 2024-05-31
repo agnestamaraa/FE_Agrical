@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:kalender_pertanian_ta/model/location.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/infotertinggi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/prakiraancuaca.dart';
+import 'package:kalender_pertanian_ta/views/home_screen/weatherLoadingBox.dart';
 import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
 import 'package:kalender_pertanian_ta/widgets/button_global.dart';
 import 'package:kalender_pertanian_ta/services/location_service.dart';
@@ -26,18 +27,7 @@ class _HomeTestState extends State<HomeTest> {
   late Future<List<Location>> locationList; // for fetched location data
   late Future<WeatherModel> weatherData; // for fetched weather data
 
-  // Method to fetch locations
-  final List<String> items = [
-    'Cikembulan',
-    'Cimalaka',
-    'Cimanggu',
-    'Cipacing',
-    'Jatinangor',
-    'Tanjungkerta',
-    'Sukamantri',
-    'Cisitu',
-  ];
-
+  
   // Location and Location Key List
   final List<Map<String, dynamic>> locationData = [ 
     {"location": "Buahdua", "code": 202581}, 
@@ -61,8 +51,6 @@ class _HomeTestState extends State<HomeTest> {
     {"location": "Ujungjaya", "code": 202758},
     {"location": "Wado", "code": 202759},
   ]; 
-
-  
 
   List<_SalesData> data = [
     _SalesData('Kentang', 35),
@@ -94,11 +82,14 @@ class _HomeTestState extends State<HomeTest> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double width = size.width;
+    double height = size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -181,9 +172,8 @@ class _HomeTestState extends State<HomeTest> {
                             setState(() {
                               selectedValue = value;
                               selectedLocationCode = locationData.firstWhere((element) => element['location'] == value)['code'];
+                              weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
                             });
-
-                            // weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
                           },
                           buttonStyleData: const ButtonStyleData(
                               padding: EdgeInsets.only(left: 0, right: 9),
@@ -245,7 +235,7 @@ class _HomeTestState extends State<HomeTest> {
                         future: weatherData,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
+                            return weatherLoadingbar();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (!snapshot.hasData) {
@@ -255,7 +245,8 @@ class _HomeTestState extends State<HomeTest> {
                             return Container(
                               margin: const EdgeInsets.only(top: 20),
                               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                              width: double.infinity, // menyesuaikan dengan layar
+                              width: double.infinity,
+                              height: 400, // menyesuaikan dengan layar
                               decoration: BoxDecoration(
                                 color: GlobalColors.mainColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -291,7 +282,6 @@ class _HomeTestState extends State<HomeTest> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Text(selectedLocationCode.toString()),
                                           Text(
                                             weather.time,
                                             style: TextStyle(
@@ -325,7 +315,7 @@ class _HomeTestState extends State<HomeTest> {
                                         '${weather.temperature}',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 90,
+                                          fontSize: 45,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -361,7 +351,7 @@ class _HomeTestState extends State<HomeTest> {
                                       )
                                     ),
 
-                                  SizedBox(height: 25),
+                                  SizedBox(height: 40),
 
                                   GlobalButtonn(
                                     onTap: () {
