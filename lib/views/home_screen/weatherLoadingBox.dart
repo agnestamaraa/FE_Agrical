@@ -1,8 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 
 class weatherLoadingbar extends StatefulWidget {
-  const weatherLoadingbar({super.key});
+  final String status;
+
+  const weatherLoadingbar({this.status = '', Key? key}) : super(key: key);
 
   @override
   State<weatherLoadingbar> createState() => _weatherLoadingbarState();
@@ -23,7 +27,19 @@ class _weatherLoadingbarState extends State<weatherLoadingbar> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator()
+          Container(
+            child: widget.status.isEmpty
+              ? CircularProgressIndicator(
+                strokeWidth: 9.0, // Customize the width of the circular track
+                backgroundColor: Colors.white, // Background color of the track
+              )
+              : Text(widget.status,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontFamily: 'Inter'
+              ),),
+          )
         ],
       )
     );

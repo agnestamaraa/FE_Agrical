@@ -237,9 +237,9 @@ class _HomeTestState extends State<HomeTest> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return weatherLoadingbar();
                           } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
+                            return weatherLoadingbar(status: 'Error Fetching API, Error: ${snapshot.error}');
                           } else if (!snapshot.hasData) {
-                            return Text('No data available');
+                            return weatherLoadingbar(status: 'No data available');
                           } else {
                             final weather = snapshot.data;
                             return Container(
