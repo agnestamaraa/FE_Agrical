@@ -6,7 +6,7 @@ import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 class weatherLoadingbar extends StatefulWidget {
   final String status;
 
-  const weatherLoadingbar({this.status = '', Key? key}) : super(key: key);
+  const weatherLoadingbar({this.status = '', super.key});
 
   @override
   State<weatherLoadingbar> createState() => _weatherLoadingbarState();
@@ -19,7 +19,7 @@ class _weatherLoadingbarState extends State<weatherLoadingbar> {
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       width: double.infinity, // menyesuaikan dengan layar
-      height: 400,
+      height: 370,
       decoration: BoxDecoration(
         color: GlobalColors.mainColor,
         borderRadius: BorderRadius.circular(10),

@@ -11,7 +11,6 @@ import 'package:kalender_pertanian_ta/views/home_screen/prakiraancuaca.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/weatherLoadingBox.dart';
 import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
 import 'package:kalender_pertanian_ta/widgets/button_global.dart';
-import 'package:kalender_pertanian_ta/services/location_service.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 
@@ -82,9 +81,6 @@ class _HomeTestState extends State<HomeTest> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double width = size.width;
-    double height = size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -246,7 +242,7 @@ class _HomeTestState extends State<HomeTest> {
                               margin: const EdgeInsets.only(top: 20),
                               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                               width: double.infinity,
-                              height: 400, // menyesuaikan dengan layar
+                              height: 370, // menyesuaikan dengan layar
                               decoration: BoxDecoration(
                                 color: GlobalColors.mainColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -298,7 +294,7 @@ class _HomeTestState extends State<HomeTest> {
 
                                   // icon cuaca
                                   Container(
-                                    margin: const EdgeInsets.only(top: 20),
+                                    margin: const EdgeInsets.only(top: 16),
                                     alignment: Alignment.center,
                                     child: Image.asset(
                                       'assets/images/cerahberawan.png',
@@ -351,13 +347,15 @@ class _HomeTestState extends State<HomeTest> {
                                       )
                                     ),
 
-                                  SizedBox(height: 40),
+                                  SizedBox(height: 24),
 
                                   GlobalButtonn(
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => WeatherForecastScreen())
+                                        MaterialPageRoute(builder: (context) => WeatherForecastScreen(
+                                          weatherData: weather, 
+                                          location: (selectedValue == null) ? "Buahdua": selectedValue!, ))
                                       );
                                     },
                                     buttonColor: Colors.white,
@@ -366,7 +364,7 @@ class _HomeTestState extends State<HomeTest> {
                                     fontSize: 14,
                                     buttonHeight: 50,
                                   ),
-                                  const SizedBox(height: 16),
+                                  // const SizedBox(height: 8),
                                 ],
                               ),
                             );

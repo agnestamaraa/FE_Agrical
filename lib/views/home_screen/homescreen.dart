@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       'Hai, Juan!',
-                      style: TextStyle(
+                      style: TextStyle (
                           color: GlobalColors.textMainColor,
                           fontSize: 24,
                           fontFamily: 'Inter',

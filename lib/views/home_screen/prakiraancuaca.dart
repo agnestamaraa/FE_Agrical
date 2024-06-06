@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
+import 'package:kalender_pertanian_ta/model/weathermodel.dart';
 
 class WeatherForecastScreen extends StatelessWidget {
-  const WeatherForecastScreen({super.key});
+  final WeatherModel weatherData;
+  final String location;
+  
+  const WeatherForecastScreen({super.key, required this.weatherData, required this.location});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,7 @@ class WeatherForecastScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Sumedang, Jawa Barat',
+                      '${location}, Jawa Barat',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -58,14 +62,14 @@ class WeatherForecastScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      '21°C',
+                      weatherData.temperature,
                       style: TextStyle(
                         fontSize: 50,
                         color: Colors.white,
                       ),
                     ),
                     Text(
-                      'Cerah berawan',
+                      weatherData.iconPhrase,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -80,7 +84,7 @@ class WeatherForecastScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.arrow_back_ios_new_rounded),
                   Text(
-                    '26 Februari 2024',
+                    weatherData.dateInfo,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
