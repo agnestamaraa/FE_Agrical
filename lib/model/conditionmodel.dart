@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ConditionModel {
   final String date;
   final String time;

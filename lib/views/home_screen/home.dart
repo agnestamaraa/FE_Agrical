@@ -67,6 +67,7 @@ class _HomeTestState extends State<HomeTest> {
 
   @override
   Widget build(BuildContext context) { 
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -343,7 +344,6 @@ class _HomeTestState extends State<HomeTest> {
                       ),
                     const SizedBox(height: 16),
                     chartProduksi(),
-                    // Volume Penjualan Tanaman
                     const SizedBox(height: 10),
                     PenjualanTertinggi(),
                     const SizedBox(height: 26)
