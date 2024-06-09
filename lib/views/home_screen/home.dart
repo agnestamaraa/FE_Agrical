@@ -5,7 +5,13 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 import 'package:kalender_pertanian_ta/model/location.dart';
+import 'package:kalender_pertanian_ta/model/pricemodel.dart';
+import 'package:kalender_pertanian_ta/model/saleschartmodel.dart';
+import 'package:kalender_pertanian_ta/model/salesmodel.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
+import 'package:kalender_pertanian_ta/services/priceService.dart';
+import 'package:kalender_pertanian_ta/services/salesService.dart';
+import 'package:kalender_pertanian_ta/views/home_screen/chartProduksi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/infotertinggi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/prakiraancuaca.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/weatherLoadingBox.dart';
@@ -59,6 +65,7 @@ class _HomeTestState extends State<HomeTest> {
     _SalesData('Jagung', 34)
   ];
 
+
   String? selectedValue;
   int selectedLocationCode = 202581;
   final TextEditingController textEditingController = TextEditingController();
@@ -68,7 +75,6 @@ class _HomeTestState extends State<HomeTest> {
     super.initState();
 
     weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
-    
     print(weatherData);
 
   }
@@ -375,34 +381,7 @@ class _HomeTestState extends State<HomeTest> {
                     const SizedBox(height: 16),
 
                     // Volume Penjualan Tanaman
-                    SfCartesianChart(
-                        primaryXAxis: const CategoryAxis(),
-                        // Chart title
-                        title: const ChartTitle(
-                            text: 
-                            'Volume Penjualan Tanaman',
-                            textStyle: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500
-                            ),
-                          ),
-                        // Enable legend
-                        legend: const Legend(isVisible: true),
-                        // Enable tooltip
-                        tooltipBehavior: TooltipBehavior(enable: true),
-                        series: <CartesianSeries<_SalesData, String>>[
-                          BarSeries<_SalesData, String>(
-                              dataSource: data,
-                              xValueMapper: (_SalesData sales, _) => sales.year,
-                              yValueMapper: (_SalesData sales, _) =>
-                                  sales.sales,
-                              name: 'Volume Penjualan',
-                              color: GlobalColors.mainColor,
-                              // Enable data label
-                              dataLabelSettings:
-                                  const DataLabelSettings(isVisible: true))
-                        ]),
+                    chartProduksi(),
                     const SizedBox(height: 10),
                     PenjualanTertinggi(),
 
@@ -416,6 +395,37 @@ class _HomeTestState extends State<HomeTest> {
       ),
     );
   }
+
+  // SfCartesianChart chartProduksi() {
+  //   return SfCartesianChart(
+  //                     primaryXAxis: const CategoryAxis(),
+  //                     // Chart title
+  //                     title: const ChartTitle(
+  //                         text: 
+  //                         'Volume Penjualan Tanaman',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Inter',
+  //                           fontSize: 14,
+  //                           fontWeight: FontWeight.w500
+  //                         ),
+  //                       ),
+  //                     // Enable legend
+  //                     legend: const Legend(isVisible: true),
+  //                     // Enable tooltip
+  //                     tooltipBehavior: TooltipBehavior(enable: true),
+  //                     series: <CartesianSeries<_SalesData, String>>[
+  //                       BarSeries<_SalesData, String>(
+  //                           dataSource: data,
+  //                           xValueMapper: (_SalesData sales, _) => sales.year,
+  //                           yValueMapper: (_SalesData sales, _) =>
+  //                               sales.sales,
+  //                           name: 'Volume Penjualan',
+  //                           color: GlobalColors.mainColor,
+  //                           // Enable data label
+  //                           dataLabelSettings:
+  //                               const DataLabelSettings(isVisible: true))
+  //                     ]);
+  // }
 }
 
 class _SalesData {

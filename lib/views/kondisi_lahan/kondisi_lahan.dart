@@ -137,7 +137,7 @@ class _KondisiLahanState extends State<KondisiLahan> {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                infoCard('Temperatur', '${condition!.temperature}', 'Cerah berawan'),
+                                infoCard('Temperatur', '${condition!.temperature}', '${condition.iconPhrase}'),
                                 infoCard('Kelembaban', '${condition!.humidity}', 'Normal'),
                                 infoCard('Tegangan', '${condition.voltage}', 'Normal'),
                                 infoCard('Titik Embun', '26°', 'Normal'),

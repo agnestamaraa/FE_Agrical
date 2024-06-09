@@ -8,6 +8,7 @@ class ConditionModel {
   final int solarRadiation;
   final int humidity;
   final String temperature;
+  final String iconPhrase;
   final int pressure;
   final double windSpeed;
   final int windDirection;
@@ -26,6 +27,7 @@ class ConditionModel {
     required this.solarRadiation, 
     required this.humidity, 
     required this.temperature, 
+    required this.iconPhrase,
     required this.pressure, 
     required this.windSpeed, 
     required this.windDirection, 
@@ -46,6 +48,7 @@ class ConditionModel {
       solarRadiation: json['solarradiation'] ?? 0, 
       humidity: json['humidity'] ?? 0, 
       temperature: json['temperature'] ?? 'Unknown Temperature', 
+      iconPhrase: json['iconPhrase'] ?? 'Unknown Icon Phrase',
       pressure: json['pressure'] ?? 0, 
       windSpeed: (json['windspeed'] ?? 0.0).toDouble(),
       windDirection: json['winddirection'] ?? 0, 
@@ -67,6 +70,7 @@ class ConditionModel {
       'solarradiation': solarRadiation, 
       'humidity': humidity, 
       'temperature': temperature, 
+      'iconPhrase': iconPhrase,
       'pressure': pressure, 
       'windspeed': windSpeed,
       'winddirection': windDirection, 
@@ -77,5 +81,5 @@ class ConditionModel {
       'moisture': moisture, 
       'isemergency': isEmergency
     };
-}
+  }
 }
