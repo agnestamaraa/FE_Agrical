@@ -1,9 +1,13 @@
+import 'dart:developer';
 import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
+import 'package:kalender_pertanian_ta/model/conditionmodel.dart';
+import 'package:kalender_pertanian_ta/views/kondisi_lahan/infoCardLoading.dart';
 import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
+import 'package:kalender_pertanian_ta/services/conditionService.dart';
 
 class KondisiLahan extends StatefulWidget {
   const KondisiLahan({super.key});
@@ -14,6 +18,16 @@ class KondisiLahan extends StatefulWidget {
 
 class _KondisiLahanState extends State<KondisiLahan> {
   bool _isIrrigationOn = true; // State variable for the switch
+
+  late Future<ConditionModel> conditionData;
+
+  @override
+  void initState(){
+    super.initState();
+    conditionData = ConditionService().getCondition();
+    log(conditionData.toString());
+    print(conditionData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,23 +117,37 @@ class _KondisiLahanState extends State<KondisiLahan> {
                       ),
                       SizedBox(height: 10),
         
-                      Container(
-                        // color: Colors.white,
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            infoCard('Temperatur', '21°', 'Cerah berawan'),
-                            infoCard('Kelembaban', '52%', 'Normal'),
-                            infoCard('Presipitasi', '45%', 'Normal'),
-                            infoCard('Titik Embun', '26°', 'Normal'),
-                            infoCard('Titik Embun', '26°', 'Normal'),
-                            infoCard('Titik Embun', '26°', 'Normal'),
-                          ],
-                        ),
+                      FutureBuilder<ConditionModel>(
+                        future: conditionData,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return loadingCardGrid();
+                          } else if (snapshot.hasError) {
+                            return Text('Error Fetching API, Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData) {
+                            return Text('No data available');
+                          } else {
+                            final condition = snapshot.data;
+                            return Container(
+                            // color: Colors.white,
+                            child: GridView.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                infoCard('Temperatur', '${condition!.temperature}', 'Cerah berawan'),
+                                infoCard('Kelembaban', '${condition!.humidity}', 'Normal'),
+                                infoCard('Tegangan', '${condition.voltage}', 'Normal'),
+                                infoCard('Titik Embun', '26°', 'Normal'),
+                                infoCard('Titik Embun', '26°', 'Normal'),
+                                infoCard('Titik Embun', '26°', 'Normal'),
+                              ],
+                            ),
+                          );
+                         };
+                        },
                       ),
                       SizedBox(height: 16),
         
@@ -151,6 +179,7 @@ class _KondisiLahanState extends State<KondisiLahan> {
                               LinearProgressIndicator(
                                 value: 0.2,
                                 minHeight: 10,
+                                color: GlobalColors.mainColor,
                               ),
                               SizedBox(height: 8),
                               Text('Status Irigasi'),
@@ -160,6 +189,10 @@ class _KondisiLahanState extends State<KondisiLahan> {
                                 children: [
                                   Text('ON'),
                                   Switch(
+                                    activeColor: GlobalColors.backgroundColor,
+                                    activeTrackColor: GlobalColors.mainColor,
+                                    inactiveThumbColor: GlobalColors.textColor,
+                                    inactiveTrackColor: GlobalColors.backgroundColor,
                                     value: _isIrrigationOn, 
                                     onChanged: (bool value) {
                                       setState(() {
@@ -188,6 +221,13 @@ class _KondisiLahanState extends State<KondisiLahan> {
 Widget infoCard(String title, String value, String status) {
   return Card(
     color: Colors.white,
+    surfaceTintColor: Colors.white,
+    shape: RoundedRectangleBorder(
+      side: BorderSide(
+        color: GlobalColors.mainColor
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
     child: Padding(
       padding: const  EdgeInsets.all(16),
       child: Column(
