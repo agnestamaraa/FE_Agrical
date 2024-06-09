@@ -248,6 +248,7 @@ class _HomeTestState extends State<HomeTest> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
