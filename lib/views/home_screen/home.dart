@@ -1,24 +1,15 @@
-import 'dart:convert';
-// import 'dart:ffi';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 import 'package:kalender_pertanian_ta/model/location.dart';
-import 'package:kalender_pertanian_ta/model/pricemodel.dart';
-import 'package:kalender_pertanian_ta/model/saleschartmodel.dart';
-import 'package:kalender_pertanian_ta/model/salesmodel.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
-import 'package:kalender_pertanian_ta/services/priceService.dart';
-import 'package:kalender_pertanian_ta/services/salesService.dart';
+import 'package:kalender_pertanian_ta/services/weatherService.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/chartProduksi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/infotertinggi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/prakiraancuaca.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/weatherLoadingBox.dart';
 import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
 import 'package:kalender_pertanian_ta/widgets/button_global.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:http/http.dart' as http;
 
 class HomeTest extends StatefulWidget {
   const HomeTest({super.key});
@@ -57,15 +48,6 @@ class _HomeTestState extends State<HomeTest> {
     {"location": "Wado", "code": 202759},
   ]; 
 
-  List<_SalesData> data = [
-    _SalesData('Kentang', 35),
-    _SalesData('Kacang', 28),
-    _SalesData('Cabai', 40),
-    _SalesData('Beras', 32),
-    _SalesData('Jagung', 34)
-  ];
-
-
   String? selectedValue;
   int selectedLocationCode = 202581;
   final TextEditingController textEditingController = TextEditingController();
@@ -73,10 +55,8 @@ class _HomeTestState extends State<HomeTest> {
   @override
   void initState() {
     super.initState();
-
-    weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
+    weatherData = WeatherService().getWeatherFromUrl(selectedLocationCode.toString());
     print(weatherData);
-
   }
 
   @override
@@ -86,7 +66,7 @@ class _HomeTestState extends State<HomeTest> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -174,7 +154,7 @@ class _HomeTestState extends State<HomeTest> {
                             setState(() {
                               selectedValue = value;
                               selectedLocationCode = locationData.firstWhere((element) => element['location'] == value)['code'];
-                              weatherData = _getWeatherFromUrl('https://agricalbackend-production.up.railway.app/latestweathercondition', selectedLocationCode.toString());
+                              weatherData = WeatherService().getWeatherFromUrl(selectedLocationCode.toString());
                             });
                           },
                           buttonStyleData: const ButtonStyleData(
@@ -324,24 +304,7 @@ class _HomeTestState extends State<HomeTest> {
                                         ),
                                       ),
                                       const SizedBox(width: 4),
-                                      // RichText(
-                                      //     text: const TextSpan(
-                                      //   text: '°',
-                                      //   style: TextStyle(
-                                      //     color: Colors.white,
-                                      //     fontSize: 20, // Ukuran simbol derajat
-                                      //     fontFamily: 'Inter',
-                                      //     fontWeight: FontWeight.w500,
-                                      //   ),
-                                      //   children: [
-                                      //     TextSpan(
-                                      //       text: 'C',
-                                      //       style: TextStyle(
-                                      //         fontSize: 14, // Ukuran huruf 'C'
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // )),
+          
                                     ],
                                   ),
 
@@ -379,12 +342,10 @@ class _HomeTestState extends State<HomeTest> {
                         },
                       ),
                     const SizedBox(height: 16),
-
-                    // Volume Penjualan Tanaman
                     chartProduksi(),
+                    // Volume Penjualan Tanaman
                     const SizedBox(height: 10),
                     PenjualanTertinggi(),
-
                     const SizedBox(height: 26)
                   ],
                 ),
@@ -395,63 +356,4 @@ class _HomeTestState extends State<HomeTest> {
       ),
     );
   }
-
-  // SfCartesianChart chartProduksi() {
-  //   return SfCartesianChart(
-  //                     primaryXAxis: const CategoryAxis(),
-  //                     // Chart title
-  //                     title: const ChartTitle(
-  //                         text: 
-  //                         'Volume Penjualan Tanaman',
-  //                         textStyle: TextStyle(
-  //                           fontFamily: 'Inter',
-  //                           fontSize: 14,
-  //                           fontWeight: FontWeight.w500
-  //                         ),
-  //                       ),
-  //                     // Enable legend
-  //                     legend: const Legend(isVisible: true),
-  //                     // Enable tooltip
-  //                     tooltipBehavior: TooltipBehavior(enable: true),
-  //                     series: <CartesianSeries<_SalesData, String>>[
-  //                       BarSeries<_SalesData, String>(
-  //                           dataSource: data,
-  //                           xValueMapper: (_SalesData sales, _) => sales.year,
-  //                           yValueMapper: (_SalesData sales, _) =>
-  //                               sales.sales,
-  //                           name: 'Volume Penjualan',
-  //                           color: GlobalColors.mainColor,
-  //                           // Enable data label
-  //                           dataLabelSettings:
-  //                               const DataLabelSettings(isVisible: true))
-  //                     ]);
-  // }
-}
-
-class _SalesData {
-  _SalesData(this.year, this.sales);
-
-  final String year;
-  final double sales;
-}
-
-
-Future<WeatherModel> _getWeatherFromUrl(String url, String code) async {
-    final body = jsonEncode({
-        "locationkey": code, 
-    });
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      var decoded = json.decode(response.body)["data"][0];
-      return WeatherModel.fromJson(decoded);
-    } else {
-      throw Exception();
-    }
 }

@@ -38,8 +38,8 @@ class SalesChartList {
         json['tanaman'].map((model) => SalesChart.fromJson(model)));
 
     // Sort the list by volumePenjualan in descending order
-    salesCharts.sort((a, b) => b.volumePenjualan.compareTo(a.volumePenjualan));
-    
+    salesCharts.sort((a, b) => a.volumePenjualan.compareTo(b.volumePenjualan));
+    salesCharts.take(5);
     return SalesChartList(tanaman: salesCharts);
   }
 
