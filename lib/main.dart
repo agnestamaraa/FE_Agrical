@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: const SplashScreen(),
       // getPages: [
       //   GetPage(name: '/', page: () => NavBar()),
       //   GetPage(name: '/home', page: () => HomeScreen()),

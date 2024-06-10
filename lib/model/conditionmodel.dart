@@ -2,19 +2,19 @@ class ConditionModel {
   final String date;
   final String time;
   final double voltage;
-  final int lux;
-  final int solarRadiation;
-  final int humidity;
+  final double lux;
+  final double solarRadiation;
+  final double humidity;
   final String temperature;
   final String iconPhrase;
-  final int pressure;
+  final double pressure;
   final double windSpeed;
-  final int windDirection;
+  final double windDirection;
   final double windGust;
   final double rainAmount;
   final bool statusIrigasi;
   final double waterLevel;
-  final int moisture;
+  final double moisture;
   final bool isEmergency;
 
   const ConditionModel({
@@ -42,19 +42,19 @@ class ConditionModel {
       date: json['date'] ?? 'Unknown Date', 
       time: json['time'] ?? 'Unknown Time', 
       voltage: (json['voltage'] ?? 0.0).toDouble(), 
-      lux: json['lux'] ?? 0, 
-      solarRadiation: json['solarradiation'] ?? 0, 
-      humidity: json['humidity'] ?? 0, 
+      lux: (json['lux'] ?? 0.0).toDouble(), 
+      solarRadiation: (json['solarradiation'] ?? 0.0).toDouble(), 
+      humidity: (json['humidity'] ?? 0.0).toDouble(), 
       temperature: json['temperature'] ?? 'Unknown Temperature', 
       iconPhrase: json['iconPhrase'] ?? 'Unknown Icon Phrase',
-      pressure: json['pressure'] ?? 0, 
+      pressure: (json['pressure'] ?? 0.0).toDouble(), 
       windSpeed: (json['windspeed'] ?? 0.0).toDouble(),
-      windDirection: json['winddirection'] ?? 0, 
+      windDirection: (json['winddirection'] ?? 0.0).toDouble(), 
       windGust: (json['windgust'] ?? 0.0).toDouble(), 
       rainAmount: (json['rainamount'] ?? 0.0).toDouble(), 
       statusIrigasi: json['statusirigasi'] ?? false, 
       waterLevel: (json['waterlevel'] ?? 0.0).toDouble(), 
-      moisture: json['moisture'] ?? 0, 
+      moisture: (json['moisture'] ?? 0.0).toDouble(), 
       isEmergency: json['isemergency'] ?? false
     );
   }

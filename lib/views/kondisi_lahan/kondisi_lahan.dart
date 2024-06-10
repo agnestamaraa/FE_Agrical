@@ -43,6 +43,7 @@ class _KondisiLahanState extends State<KondisiLahan> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Informasi Lahan',
@@ -128,9 +129,7 @@ class _KondisiLahanState extends State<KondisiLahan> {
                             return Text('No data available');
                           } else {
                             final condition = snapshot.data;
-                            return Container(
-                            // color: Colors.white,
-                            child: GridView.count(
+                            return GridView.count(
                               crossAxisCount: 2,
                               crossAxisSpacing: 16,
                               mainAxisSpacing: 16,
@@ -138,14 +137,15 @@ class _KondisiLahanState extends State<KondisiLahan> {
                               physics: NeverScrollableScrollPhysics(),
                               children: [
                                 infoCard('Temperatur', '${condition!.temperature}', '${condition.iconPhrase}'),
-                                infoCard('Kelembaban', '${condition!.humidity}', 'Normal'),
-                                infoCard('Tegangan', '${condition.voltage}', 'Normal'),
-                                infoCard('Titik Embun', '26°', 'Normal'),
-                                infoCard('Titik Embun', '26°', 'Normal'),
-                                infoCard('Titik Embun', '26°', 'Normal'),
+                                infoCard('Kelembaban', '${condition.humidity}', '%'),
+                                infoCard('Intensitas Cahaya', '${condition.lux}', 'lx'),
+                                infoCard('Radiasi Surya', '${condition.solarRadiation}', 'W/m²'),
+                                infoCard('Tekanan', '${condition.pressure}', 'hPa'),
+                                infoCard('Kecepatan Angin', '${condition.windSpeed}', 'm/s'),
+                                infoCard('Arah Angin', '${condition.windDirection}°', ''),
+                                infoCard('Kelembaban Tanah', '${condition.moisture}', '%'),
                               ],
-                            ),
-                          );
+                            );
                          };
                         },
                       ),
@@ -236,7 +236,10 @@ Widget infoCard(String title, String value, String status) {
           Text(
             title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+              color: GlobalColors.textMainColor
             ),
           ),
           SizedBox(height: 8),
@@ -245,14 +248,21 @@ Widget infoCard(String title, String value, String status) {
             value,
             style: TextStyle(
               fontSize: 32,
-              color: Colors.green,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+              color: GlobalColors.mainColor
             ),
           ),
           SizedBox(height: 8),
 
           Text(
             status,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              color: GlobalColors.textMainColor
+            ),
           )
         ],
       ),
