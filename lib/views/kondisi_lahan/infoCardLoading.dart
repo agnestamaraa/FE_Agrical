@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
+import 'package:kalender_pertanian_ta/views/kondisi_lahan/infoCard.dart';
 
 class loadingCardGrid extends StatelessWidget {
-  const loadingCardGrid({super.key});
+  final String condition;
+  const loadingCardGrid({super.key, this.condition = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -14,36 +16,14 @@ class loadingCardGrid extends StatelessWidget {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                loadingCard(),
-                loadingCard(),
-                loadingCard(),
-                loadingCard(),
-                loadingCard(),
-                loadingCard(),
+                loadingCard(condition: condition,),
+                loadingCard(condition: condition,),
+                loadingCard(condition: condition,),
+                loadingCard(condition: condition,),
+                loadingCard(condition: condition,),
+                loadingCard(condition: condition,),
               ],
             ),
     );
   }
-}
-
-Widget loadingCard() {
-  return Card(
-    color: Colors.white,
-    surfaceTintColor: Colors.white,
-    shape: RoundedRectangleBorder(
-      side: BorderSide(
-        color: GlobalColors.mainColor
-      ),
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    child: Padding(
-      padding: const  EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-        ],
-      ),
-    ),
-  );
 }

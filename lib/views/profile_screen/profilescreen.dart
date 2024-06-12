@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:kalender_pertanian_ta/views/home_screen/home.dart';
-import 'package:kalender_pertanian_ta/widgets/navigationbar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,10 +22,7 @@ class ProfileScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => NavBar())
-                          );
+                        Get.back();
                       },
                       icon: Icon(Icons.arrow_back_ios_new_rounded)
                     ),

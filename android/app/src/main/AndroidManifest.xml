@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="kalender_pertanian_ta"
+        android:label="AgriCal"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -41,4 +41,7 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+
+    <uses-permission android:name="android.permission.INTERNET"
+        android:maxSdkVersion="34" />
 </manifest>

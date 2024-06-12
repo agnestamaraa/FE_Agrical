@@ -1,5 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:http/http.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 import 'package:kalender_pertanian_ta/model/location.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
@@ -103,10 +106,7 @@ class _HomeTestState extends State<HomeTest> {
                     // const SizedBox(width: 10),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ProfileScreen())
-                        );
+                        Get.to(() => ProfileScreen());
                       }, 
                       icon: Icon(Icons.account_circle)
                     ),
@@ -322,12 +322,15 @@ class _HomeTestState extends State<HomeTest> {
 
                                   GlobalButtonn(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => WeatherForecastScreen(
-                                          weatherData: weather, 
-                                          location: (selectedValue == null) ? "Buahdua": selectedValue!, ))
-                                      );
+                                      Get.to(() => WeatherForecastScreen(
+                                        weatherData: weather, 
+                                        location: (selectedValue == null) ? "Buahdua": selectedValue!,));
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(builder: (context) => WeatherForecastScreen(
+                                      //     weatherData: weather, 
+                                      //     location: (selectedValue == null) ? "Buahdua": selectedValue!, ))
+                                      // );
                                     },
                                     buttonColor: Colors.white,
                                     buttonText: 'Lihat Selengkapnya',

@@ -1,12 +1,10 @@
 import 'dart:developer';
-import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 import 'package:kalender_pertanian_ta/model/conditionmodel.dart';
 import 'package:kalender_pertanian_ta/views/kondisi_lahan/infoCardLoading.dart';
-import 'package:kalender_pertanian_ta/views/profile_screen/profilescreen.dart';
 import 'package:kalender_pertanian_ta/services/conditionService.dart';
 
 class KondisiLahan extends StatefulWidget {
@@ -138,12 +136,12 @@ class _KondisiLahanState extends State<KondisiLahan> {
                               children: [
                                 infoCard('Temperatur', '${condition!.temperature}', '${condition.iconPhrase}'),
                                 infoCard('Kelembaban', '${condition.humidity}', '%'),
-                                infoCard('Intensitas Cahaya', '${condition.lux}', 'lx'),
-                                infoCard('Radiasi Surya', '${condition.solarRadiation}', 'W/m²'),
-                                infoCard('Tekanan', '${condition.pressure}', 'hPa'),
-                                infoCard('Kecepatan Angin', '${condition.windSpeed}', 'm/s'),
-                                infoCard('Arah Angin', '${condition.windDirection}°', ''),
-                                infoCard('Kelembaban Tanah', '${condition.moisture}', '%'),
+                                infoCard('Intensitas Cahaya', '${condition.lux.toStringAsFixed(2)}', 'lx'),
+                                infoCard('Radiasi Surya', '${condition.solarRadiation.toStringAsFixed(2)}', 'W/m²'),
+                                infoCard('Tekanan', '${condition.pressure.toStringAsFixed(2)}', 'hPa'),
+                                infoCard('Kecepatan Angin', '${condition.windSpeed.toStringAsFixed(2)}', 'm/s'),
+                                infoCard('Arah Angin', '${condition.windDirection.toStringAsFixed(2)}°', ''),
+                                infoCard('Kelembaban Tanah', '${condition.moisture.toStringAsFixed(2)}', '%'),
                               ],
                             );
                          };
@@ -229,36 +227,61 @@ Widget infoCard(String title, String value, String status) {
       borderRadius: BorderRadius.circular(10.0),
     ),
     child: Padding(
-      padding: const  EdgeInsets.all(16),
+      padding: const  EdgeInsets.all(12),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-              color: GlobalColors.textMainColor
-            ),
-          ),
-          SizedBox(height: 8),
+          (title.length == 2) 
+            ? 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title[0],
+                  style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: GlobalColors.textMainColor
+                  ),
+                ),
+                Text(
+                  title[1],
+                  style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: GlobalColors.textMainColor
+                  ),
+                ),
+              ],
+            )
+            : 
+            Text(
+                title,
+                style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: GlobalColors.textMainColor
+                ),
+              ),
 
           Text(
             value,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 26,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               color: GlobalColors.mainColor
             ),
           ),
-          SizedBox(height: 8),
 
           Text(
             status,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               color: GlobalColors.textMainColor

@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 // const SizedBox(height: 20),           // buat jarak
                 Text(
-                  'Wujudkan panen impian Anda dengan\nAgrical',
+                  'Wujudkan panen impian Anda dengan Agrical',
                   style: TextStyle(
                     color: GlobalColors.textColor,
                     fontSize: 18,

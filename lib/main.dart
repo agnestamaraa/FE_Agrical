@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:kalender_pertanian_ta/views/calendar_screen/calendarscreen.dart';
+import 'package:kalender_pertanian_ta/views/home_screen/home.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/homescreen.dart';
+import 'package:kalender_pertanian_ta/views/kondisi_lahan/kondisi_lahan.dart';
 import 'package:kalender_pertanian_ta/views/login_register/login_screen.dart';
 import 'package:kalender_pertanian_ta/views/splash_screen/splash_screen.dart';
 import 'package:kalender_pertanian_ta/widgets/navigationbar.dart';
@@ -36,7 +39,10 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       // getPages: [
       //   GetPage(name: '/', page: () => NavBar()),
-      //   GetPage(name: '/home', page: () => HomeScreen()),
+      //   GetPage(name: '/home', page: () => HomeTest()),
+      //   // GetPage(name: '/home/weatherdetail', page: () => HomeTest()),
+      //   GetPage(name: '/information', page: () => KondisiLahan()),
+      //   GetPage(name: '/calender', page: () => CalendarScreen())
       // ],
     );
   }

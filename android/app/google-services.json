@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821242027192",
+    "project_id": "agrical-e61c7",
+    "storage_bucket": "agrical-e61c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821242027192:android:a6b721278eb882b7e8a84d",
+        "android_client_info": {
+          "package_name": "com.example.kalender_pertanian_ta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwVc_pmtwMfY-DCq_vubVMyH9VGFzboeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
