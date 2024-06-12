@@ -48,6 +48,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return events[day] ?? [];
   }
 
+  void _deleteEvent(Event event) {
+    setState(() {
+      if (events[_selectedDay] != null) {
+        events[_selectedDay]!.remove(event);
+        // Update the events map
+        if (events[_selectedDay]!.isEmpty) {
+          events.remove(_selectedDay);
+        }
+        // Update the ValueNotifier to reflect the deletion
+        _selectedEvents.value = _getEventsForDay(_selectedDay!);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,17 +92,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     onPressed: () {
                       if (_eventController.text.isNotEmpty) {
                         setState(() {
-                          // Check if the selected day already has events
                           if (events[_selectedDay!] != null) {
-                            // Append the new event to the existing list
                             events[_selectedDay!]!.add(Event(_eventController.text));
                           } else {
-                            // Create a new list with the new event
                             events[_selectedDay!] = [Event(_eventController.text)];
                           }
                           _eventController.clear();
                           Navigator.of(context).pop();
-                          // Update the ValueNotifier to reflect the new list of events
                           _selectedEvents.value = _getEventsForDay(_selectedDay!);
                         });
                       }
@@ -131,23 +141,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       SizedBox(height: 8)
                     ],
                   ),
-                  // Notification and Profile icons
-                  // Row(
-                  //   children: [
-                  //     IconButton(
-                  //       onPressed: () {
-                  //         // Handle notification button press
-                  //       },
-                  //       icon: Icon(Icons.notifications),
-                  //     ),
-                  //     IconButton(
-                  //       onPressed: () {
-                  //         // Handle profile button press
-                  //       },
-                  //       icon: Icon(Icons.account_circle),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -200,15 +193,38 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             itemCount: value.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(12),
+                              final event = value[index];
+                              return Dismissible(
+                                key: ValueKey(event),
+                                background: Container(
+                                  color: Colors.red,
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                child: ListTile(
-                                  onTap: () => print('Event tapped: ${value[index].title}'),
-                                  title: Text('${value[index].title}'),
+                                onDismissed: (direction) {
+                                  _deleteEvent(event);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Event deleted')),
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ListTile(
+                                    title: Text('${event.title}'),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.delete),
+                                      color: Colors.red,
+                                      onPressed: () => _deleteEvent(event),
+                                    ),
+                                  ),
                                 ),
                               );
                             },
