@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:kalender_pertanian_ta/services/userManager.dart';
 import 'package:kalender_pertanian_ta/views/calendar_screen/calendarscreen.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/home.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/homescreen.dart';
@@ -10,7 +11,9 @@ import 'package:kalender_pertanian_ta/views/login_register/login_screen.dart';
 import 'package:kalender_pertanian_ta/views/splash_screen/splash_screen.dart';
 import 'package:kalender_pertanian_ta/widgets/navigationbar.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserManager.checkLoginStatus();
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
@@ -36,7 +39,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: (
+        UserManager.checkLoginStatus() == true)
+          ? const NavBar() 
+          : const SplashScreen(),
       // getPages: [
       //   GetPage(name: '/', page: () => NavBar()),
       //   GetPage(name: '/home', page: () => HomeTest()),

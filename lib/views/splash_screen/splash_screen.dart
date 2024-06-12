@@ -11,19 +11,12 @@ import 'package:kalender_pertanian_ta/widgets/navigationbar.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
   
-  Future<bool> _checkLoginStatus() async {
-    // Perform whatever logic you need to check if the user is logged in
-    // For example, you might check if there's a stored token, or other session data
 
-    // For simplicity, UserManager.isLoggedIn is used here
-    return UserManager.isLoggedIn;
-  }
 
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 1), () {
-      debugPrint(UserManager.isLoggedIn.toString());
-      (_checkLoginStatus() == true) 
+      (UserManager.checkLoginStatus() == true) 
         ? Get.off(() => NavBar())
         : Get.off(() => LoginScreen());
     });

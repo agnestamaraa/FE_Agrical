@@ -55,25 +55,6 @@ class _KondisiLahanState extends State<KondisiLahan> {
                       SizedBox(height: 8)
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     IconButton(
-                  //       icon: Icon(Icons.notifications),
-                  //       onPressed: () {
-                  //         // hgcvhg
-                  //       },
-                  //     ),
-                  //     IconButton(
-                  //       icon: Icon(Icons.account_circle),
-                  //       onPressed: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(builder: (context) => ProfileScreen())
-                  //         );
-                  //       },
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
         
@@ -217,6 +198,9 @@ class _KondisiLahanState extends State<KondisiLahan> {
 }
 
 Widget infoCard(String title, String value, String status) {
+  
+  List<String> split = title.split(" ");
+
   return Card(
     color: Colors.white,
     surfaceTintColor: Colors.white,
@@ -232,24 +216,24 @@ Widget infoCard(String title, String value, String status) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          (title.length == 2) 
+          (split.length == 2) 
             ? 
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  title[0],
+                  split[0],
                   style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                   color: GlobalColors.textMainColor
                   ),
                 ),
                 Text(
-                  title[1],
+                  split[1],
                   style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 14,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                   color: GlobalColors.textMainColor
@@ -259,7 +243,7 @@ Widget infoCard(String title, String value, String status) {
             )
             : 
             Text(
-                title,
+                split[0],
                 style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Inter',

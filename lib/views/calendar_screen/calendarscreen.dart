@@ -53,54 +53,59 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-                    elevation: 4,
-                    shape: CircleBorder(
-                      side: BorderSide(
-                        color: GlobalColors.mainColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            scrollable: true,
-                            title: Text('Event Name'),
-                            content: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _eventController,
-                              ),
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_eventController.text.isNotEmpty) {
-                                    if (events[_selectedDay!] != null) {
-                                      events[_selectedDay!]!.add(Event(_eventController.text));
-                                    } else {
-                                      events[_selectedDay!] = [Event(_eventController.text)];
-                                    }
-                                    _eventController.clear();
-                                    Navigator.of(context).pop();
-                                    _selectedEvents.value = _getEventsForDay(_selectedDay!);
-                                  }
-                                },
-                                child: Text('Submit'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: GlobalColors.mainColor,
-                    
+        elevation: 4,
+        shape: CircleBorder(
+          side: BorderSide(
+            color: GlobalColors.mainColor,
+            width: 2.0,
+          ),
+        ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                scrollable: true,
+                title: Text('Event Name'),
+                content: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _eventController,
                   ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_eventController.text.isNotEmpty) {
+                        setState(() {
+                          // Check if the selected day already has events
+                          if (events[_selectedDay!] != null) {
+                            // Append the new event to the existing list
+                            events[_selectedDay!]!.add(Event(_eventController.text));
+                          } else {
+                            // Create a new list with the new event
+                            events[_selectedDay!] = [Event(_eventController.text)];
+                          }
+                          _eventController.clear();
+                          Navigator.of(context).pop();
+                          // Update the ValueNotifier to reflect the new list of events
+                          _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                        });
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: GlobalColors.mainColor,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
@@ -214,53 +219,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                 ),
               ),
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: FloatingActionButton(
-              //       onPressed: () {
-              //         showDialog(
-              //           context: context,
-              //           builder: (context) {
-              //             return AlertDialog(
-              //               scrollable: true,
-              //               title: Text('Event Name'),
-              //               content: Padding(
-              //                 padding: EdgeInsets.all(8.0),
-              //                 child: TextField(
-              //                   controller: _eventController,
-              //                 ),
-              //               ),
-              //               actions: [
-              //                 ElevatedButton(
-              //                   onPressed: () {
-              //                     if (_eventController.text.isNotEmpty) {
-              //                       if (events[_selectedDay!] != null) {
-              //                         events[_selectedDay!]!.add(Event(_eventController.text));
-              //                       } else {
-              //                         events[_selectedDay!] = [Event(_eventController.text)];
-              //                       }
-              //                       _eventController.clear();
-              //                       Navigator.of(context).pop();
-              //                       _selectedEvents.value = _getEventsForDay(_selectedDay!);
-              //                     }
-              //                   },
-              //                   child: Text('Submit'),
-              //                 ),
-              //               ],
-              //             );
-              //           },
-              //         );
-              //       },
-              //       child: Icon(
-              //         Icons.add,
-              //         color: Colors.white,
-              //       ),
-              //       backgroundColor: GlobalColors.mainColor,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

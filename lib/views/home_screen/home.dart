@@ -1,11 +1,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:http/http.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
 import 'package:kalender_pertanian_ta/model/location.dart';
 import 'package:kalender_pertanian_ta/model/weathermodel.dart';
+import 'package:kalender_pertanian_ta/services/userManager.dart';
 import 'package:kalender_pertanian_ta/services/weatherService.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/chartProduksi.dart';
 import 'package:kalender_pertanian_ta/views/home_screen/infotertinggi.dart';
@@ -55,6 +57,7 @@ class _HomeTestState extends State<HomeTest> {
   int selectedLocationCode = 202581;
   final TextEditingController textEditingController = TextEditingController();
 
+
   @override
   void initState() {
     super.initState();
@@ -83,16 +86,36 @@ class _HomeTestState extends State<HomeTest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Hai, Juan!
-                Text(
-                  'Hai, Juan!',
-                  style: TextStyle(
-                      color: GlobalColors.textMainColor,
-                      fontSize: 24,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700
-                  ),
-                ),
+
+                FutureBuilder<String?>(
+                  future: UserManager.getUsername(), 
+                  builder:(context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Show loading indicator while waiting
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}'); // Show error if any
+                    } else if (snapshot.hasData) {
+                      final username = snapshot.data ?? 'No email found';
+                      return Text(
+                        'Hai, ${username.capitalizeFirst}!',
+                        style: TextStyle(
+                          color: GlobalColors.textMainColor,
+                          fontSize: 24,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700
+                        ),);
+                      } else {
+                      return Text(
+                        'No email found',
+                        style: TextStyle(
+                          color: GlobalColors.textMainColor,
+                          fontSize: 24,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700
+                        ),
+                      );
+                    }
+                  },),
 
                 // Notification icon
                 Row(
@@ -305,7 +328,6 @@ class _HomeTestState extends State<HomeTest> {
                                         ),
                                       ),
                                       const SizedBox(width: 4),
-          
                                     ],
                                   ),
 

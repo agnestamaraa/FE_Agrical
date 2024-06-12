@@ -1,14 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
+import 'package:kalender_pertanian_ta/services/userManager.dart';
 import 'package:kalender_pertanian_ta/views/login_register/register_screen.dart';
-import 'package:kalender_pertanian_ta/widgets/button.dart';
+import 'package:kalender_pertanian_ta/widgets/navigationbar.dart';
 import 'package:kalender_pertanian_ta/widgets/other_login.dart';
 import 'package:kalender_pertanian_ta/widgets/text_format.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
-  final TextEditingController emailController = TextEditingController();
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String? errorMessage;
+  bool isLoading = false;
+
+  Future<void> attemptLogin() async {
+    final String username = usernameController.text;
+    final String password = passwordController.text;
+
+    try {
+      final success = await UserManager.login(username, password);
+
+      setState(() {
+        isLoading = false;
+        if (!success) {
+          errorMessage = 'Incorrect username or password. Please try again.';
+        }
+      });
+
+      if (success) {
+        // Navigate to another page on successful login using Get
+        Get.off(() => NavBar());
+      }
+    } catch (e) {
+      // Handle different types of exceptions
+      setState(() {
+        isLoading = false;
+        if (e is LoginException) {
+          errorMessage = 'Login failed: ${e.message}';
+        } else if (e is NetworkException) {
+          errorMessage = 'Network error: ${e.message}';
+        } else {
+          errorMessage = 'Unexpected error occurred. Please try again.';
+        }
+      });
+    }
+  }
+
+  @override
+    void dispose() {
+      // Dispose of the controllers when the widget is disposed.
+      usernameController.dispose();
+      passwordController.dispose();
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +94,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 38),
-
                 //// Email/Username Input
                 GlobalTextFormat(
-                  controller: emailController, 
+                  controller: usernameController, 
                   text: 'Email/Username', 
                   textInputType: TextInputType.text, 
                   obscure: false
@@ -81,7 +132,36 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 38),
 
-                const LoginButton(),
+                if (errorMessage != null)  // Show error message if present
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(color: Colors.red, fontSize: 14),
+                    ),
+                ),
+                
+                InkWell(           // nambah respons
+                  onTap: (){
+                    attemptLogin();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: GlobalColors.mainColor,
+                      borderRadius: BorderRadius.circular(80),
+                    ),
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter'
+                      ),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(height: 38),
 
