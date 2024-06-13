@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kalender_pertanian_ta/consts/global.colors.dart';
-import 'package:kalender_pertanian_ta/views/calendar_screen/event.dart';
+import 'package:kalender_pertanian_ta/model/eventmodel.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -25,6 +28,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _loadEvents();
   }
 
   @override
@@ -56,11 +60,43 @@ class _CalendarScreenState extends State<CalendarScreen> {
         if (events[_selectedDay]!.isEmpty) {
           events.remove(_selectedDay);
         }
-        // Update the ValueNotifier to reflect the deletion
+        _saveEvents();
         _selectedEvents.value = _getEventsForDay(_selectedDay!);
       }
     });
   }
+
+  Future<void> _saveEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Convert the events map to a map of strings
+    final encodedEvents = events.map((date, eventList) {
+      // Convert each event in the list to a JSON-encodable map
+      final eventsAsJson = eventList.map((event) => event.toJson()).toList();
+      return MapEntry(date.toIso8601String(), jsonEncode(eventsAsJson));
+    });
+    // Save the JSON-encoded map to SharedPreferences
+    await prefs.setString('events', jsonEncode(encodedEvents));
+  }
+
+
+  Future<void> _loadEvents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedEvents = prefs.getString('events');
+    if (storedEvents != null) {
+      final decodedEvents = jsonDecode(storedEvents) as Map<String, dynamic>;
+      events = decodedEvents.map((dateString, eventsJson) {
+        final date = DateTime.parse(dateString);
+        final eventList = (jsonDecode(eventsJson) as List)
+            .map((eventJson) => Event.fromJson(eventJson))
+            .toList();
+        return MapEntry(date, eventList);
+      });
+      setState(() {
+        _selectedEvents.value = _getEventsForDay(_selectedDay!);
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +136,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           _eventController.clear();
                           Navigator.of(context).pop();
                           _selectedEvents.value = _getEventsForDay(_selectedDay!);
+                          _saveEvents();
                         });
                       }
                     },
